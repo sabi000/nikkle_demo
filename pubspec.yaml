@@ -52,6 +52,11 @@ flutter:
     - assets/images/splash.png
     - assets/images/splash_land.png
     - assets/images/nikkle.png
+    - assets/images/vec1.png
+    - assets/images/vec1_land.png
+    - assets/images/logo.png
+    - assets/images/logo.svg
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
   # For details regarding adding assets from package dependencies, see

@@ -66,7 +66,7 @@ class SplashScreen extends StatelessWidget {
                     width: smallestSide * 0.5,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        //go to login page
+                        Navigator.pushNamed(context, '/login');
                       },
                       icon: const CircleAvatar(
                         radius: 20,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nikkle/pages/login.dart';
 import 'package:nikkle/pages/splash.dart';
 import 'package:nikkle/utils/theme.dart';
 
@@ -15,6 +16,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const SplashScreen(),
+       routes: {
+        '/login': (context) => const LoginScreen(),
+      },
     );
   }
 }
