@@ -82,7 +82,7 @@ class SplashScreen extends StatelessWidget {
                         'LOGIN',
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Colors.white,
+                                  color: TColors.white,
                                 ),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -92,7 +92,7 @@ class SplashScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                           backgroundColor: TColors.primary,
-                          foregroundColor: TColors.bg),
+                          foregroundColor: TColors.white),
                     ),
                   ),
                 ],

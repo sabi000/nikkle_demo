@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: smallestSide * 0.7,
                       child: ElevatedButton(
                         onPressed: () {
-                          //TODO: go to dashboard
+                          Navigator.pushNamed(context, '/home');
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
@@ -116,14 +116,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                           backgroundColor: TColors.primary,
-                          foregroundColor: TColors.bg,
+                          foregroundColor: TColors.white,
                         ),
                         child: Text(
                           'Log In',
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge
-                              ?.copyWith(color: Colors.white),
+                              ?.copyWith(color: TColors.white),
                         ),
                       ),
                     ),
