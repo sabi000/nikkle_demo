@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:nikkle/models/cart_item.dart';
 import 'package:nikkle/models/products.dart';
 import 'package:nikkle/utils/colors.dart';
+import 'package:badges/badges.dart' as badges;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,6 +14,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController searchController = TextEditingController();
   String searchQuery = '';
+
+  final List<CartItem> cartItem = [];
+  final ValueNotifier<int> cartItemCount = ValueNotifier<int>(0);
 
   int _selectedIndex = 0;
   String selectedCategory = 'All Categories';
@@ -117,20 +122,31 @@ class _HomePageState extends State<HomePage> {
           unselectedItemColor: Colors.black,
           showSelectedLabels: false,
           showUnselectedLabels: false,
-          items: const [
-            BottomNavigationBarItem(
+          items: [
+            const BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
               label: 'Dashboard',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined),
+              icon: ValueListenableBuilder<int>(
+                valueListenable: cartItemCount,
+                builder: (context, count, _) {
+                  return badges.Badge(
+                    badgeContent: Text(
+                      '$count',
+                      style: const TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                    child: const Icon(Icons.shopping_cart_outlined),
+                  );
+                },
+              ),
               label: 'Cart',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.settings_outlined),
               label: 'Settings',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.person_outlined),
               label: 'Profile',
             ),
@@ -379,6 +395,14 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    cartItem.add(CartItem(
+                        image: product.image,
+                        name: product.name,
+                        currency: product.currency,
+                        price: product.price,
+                        selectedqty: qty));
+
+                    cartItemCount.value = cartItemCount.value + qty;
                     Navigator.of(context).pop();
                   },
                   child: const Text('OK'),
