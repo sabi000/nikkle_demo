@@ -11,6 +11,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
+
   int _selectedIndex = 0;
   String selectedCategory = 'All Categories';
   final List<String> categories = [
@@ -57,6 +59,23 @@ class _HomePageState extends State<HomePage> {
         qty: 5,
         unit: 'kg'),
   ];
+  List<Product> filteredProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    filteredProducts = products;
+
+    searchController.addListener(() {
+      setState(() {
+        searchQuery = searchController.text;
+        filteredProducts = products.where((product) {
+          return product.name.toLowerCase().contains(searchQuery.toLowerCase());
+        }).toList();
+      });
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -226,10 +245,10 @@ class _HomePageState extends State<HomePage> {
             child: Card(
               elevation: 4,
               child: ListView.builder(
-                itemCount: products.length,
+                itemCount: filteredProducts.length,
                 shrinkWrap: false,
                 itemBuilder: (context, index) {
-                  final product = products[index];
+                  final product = filteredProducts[index];
                   return SizedBox(
                     height: 80,
                     child: Center(
