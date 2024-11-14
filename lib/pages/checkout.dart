@@ -30,54 +30,6 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: TColors.primary,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_sharp,
-              color: TColors.white,
-            ),
-          ),
-          actions: [
-            Row(
-              children: [
-                Text(
-                  'Pos',
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelLarge!
-                      .copyWith(color: TColors.white),
-                ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  height: 30,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context, '/login');
-                    },
-                    icon: const Icon(
-                      Icons.logout_rounded,
-                      size: 16,
-                    ),
-                    label: Text(
-                      'Logout',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium!
-                          .copyWith(color: TColors.primary),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 15,
-                )
-              ],
-            ),
-          ],
-        ),
         body: Stack(children: [
           Column(
             children: [
@@ -110,10 +62,12 @@ class _CartScreenState extends State<CartScreen> {
           width: MediaQuery.of(context).size.width * 0.95,
           decoration: BoxDecoration(
             color: TColors.bg,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.0),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
           child: Card(
+            elevation: 0.0,
+            color: TColors.bg,
             child: Column(
               children: [
                 Consumer<CartProvider>(
@@ -299,8 +253,12 @@ class _CartScreenState extends State<CartScreen> {
                                   children: [
                                     Consumer<CartProvider>(
                                       builder: (context, cartProvider, child) {
-                                        return Padding(
+                                        return Container(
                                           padding: const EdgeInsets.all(20.0),
+                                          decoration: BoxDecoration(
+                                              color: TColors.grey,
+                                              borderRadius:
+                                                  BorderRadius.circular(4.0)),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -314,20 +272,72 @@ class _CartScreenState extends State<CartScreen> {
                                                         color: Colors.grey),
                                               ),
                                               Text(
-                                                  '${cartProvider.cartItems[0].currency} ${cartProvider.totalAmount.value.toString()}'),
+                                                  '${cartProvider.cartItems[0].currency} ${cartProvider.totalAmount.value.toStringAsFixed(2)}'),
                                             ],
                                           ),
                                         );
                                       },
                                     ),
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: 25),
                                     SizedBox(
                                       height: 50,
                                       width: MediaQuery.of(context).size.width *
                                           0.7,
                                       child: ElevatedButton.icon(
                                         onPressed: () {
-                                          //CHECKOUT LOGIC
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return StatefulBuilder(
+                                                builder: (context, setState) {
+                                                  return AlertDialog(
+                                                    title: Center(
+                                                      child: Text(
+                                                          'PROCEED TO PAY',
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .titleLarge),
+                                                    ),
+                                                    content: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Text(
+                                                            'Total Item: ${cartProvider.itemCount.value.toString()}'),
+                                                        const SizedBox(
+                                                            height: 10),
+                                                        Text(
+                                                            'Total AmountPrice: ${cartProvider.totalAmount.value.toStringAsFixed(2)}'),
+                                                        const SizedBox(
+                                                            height: 20),
+                                                      ],
+                                                    ),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: const Text(
+                                                            'Cancel'),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: const Text('OK'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          );
                                         },
                                         icon: const CircleAvatar(
                                           radius: 20,

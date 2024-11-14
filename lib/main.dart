@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nikkle/pages/checkout.dart';
 import 'package:nikkle/pages/home.dart';
+import 'package:nikkle/pages/index.dart';
 import 'package:nikkle/pages/login.dart';
 import 'package:nikkle/pages/splash.dart';
 import 'package:nikkle/services/cart_provider.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/login': (context) => const LoginScreen(),
           '/home': (context) => const HomePage(),
+          '/dashboard': (context) => const DashboardPage(),
           '/cart': (context) => const CartScreen(),
         },
       ),

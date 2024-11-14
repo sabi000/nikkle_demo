@@ -1,38 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:nikkle/models/cart_item.dart';
 import 'package:nikkle/models/products.dart';
-import 'package:nikkle/pages/checkout.dart';
 import 'package:nikkle/services/cart_provider.dart';
 import 'package:nikkle/services/cart_service.dart';
 import 'package:nikkle/utils/colors.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _DashboardPageState extends State<DashboardPage> {
   final CartService cartService = CartService();
-  final GlobalKey<NavigatorState> _cartNavigatorKey =
-      GlobalKey<NavigatorState>();
 
   final TextEditingController searchController = TextEditingController();
   String searchQuery = '';
 
   final List<CartItem> cartItem = [];
-
-  int _selectedIndex = 0;
-  String selectedCategory = 'All Categories';
-  final List<String> categories = [
-    'All Categories',
-    'cat 1',
-    'cat 2',
-    'cat 3',
-  ];
 
   final List<Product> products = [
     Product(
@@ -94,12 +81,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -121,72 +102,10 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          _buildPageContent(_selectedIndex),
+          dashboard()
         ]),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          elevation: 0.0,
-          selectedIconTheme: const IconThemeData(color: TColors.primary),
-          unselectedIconTheme: const IconThemeData(color: Colors.black),
-          selectedItemColor: TColors.primary,
-          unselectedItemColor: Colors.black,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          items: [
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: 'Dashboard',
-            ),
-            BottomNavigationBarItem(
-              icon: Consumer<CartProvider>(
-                builder: (context, cartProvider, child) {
-                  return badges.Badge(
-                    badgeContent: Text(
-                      '${cartProvider.itemCount.value}',
-                      style: const TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                    child: const Icon(Icons.shopping_cart_outlined),
-                  );
-                },
-              ),
-              label: 'Cart',
-            ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.settings_outlined),
-              label: 'Settings',
-            ),
-            const BottomNavigationBarItem(
-              icon: Icon(Icons.person_outlined),
-              label: 'Profile',
-            ),
-          ],
-        ),
       ),
     );
-  }
-
-  Widget _buildPageContent(int index) {
-    switch (index) {
-      case 0:
-        return dashboard();
-      case 1:
-        return Navigator(
-          key: _cartNavigatorKey,
-          onGenerateRoute: (RouteSettings settings) {
-            return MaterialPageRoute(
-              builder: (context) => const CartScreen(),
-            );
-          },
-        );
-      case 2:
-        return const Center(child: Text('Settings Page Content'));
-      case 3:
-        return const Center(child: Text('Profile Page Content'));
-      default:
-        return dashboard();
-    }
   }
 
   Widget dashboard() {
@@ -194,61 +113,6 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: selectedCategory,
-                  items: categories.map((String category) {
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelLarge!
-                              .copyWith(color: TColors.white)),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCategory = newValue!;
-                    });
-                  },
-                  dropdownColor: Colors.blue,
-                  icon: const Icon(Icons.arrow_drop_down, color: TColors.white),
-                ),
-              ),
-              Row(
-                children: [
-                  Text('Pos',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(color: TColors.white)),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  SizedBox(
-                    height: 30,
-                    child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.pop(context, '/login');
-                        },
-                        icon: const Icon(
-                          Icons.logout_rounded,
-                          size: 16,
-                        ),
-                        label: Text('Logout',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .copyWith(color: TColors.primary))),
-                  ),
-                ],
-              )
-            ],
-          ),
           Container(
             height: 50,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -377,7 +241,10 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.remove),
+                        icon: const Icon(
+                          Icons.remove_circle,
+                          color: TColors.primary,
+                        ),
                         onPressed: qty > 0
                             ? () {
                                 setState(() {
@@ -391,7 +258,10 @@ class _HomePageState extends State<HomePage> {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       IconButton(
-                        icon: const Icon(Icons.add),
+                        icon: const Icon(
+                          Icons.add_circle,
+                          color: TColors.primary,
+                        ),
                         onPressed: qty < product.qty
                             ? () {
                                 setState(() {
