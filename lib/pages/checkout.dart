@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:nikkle/models/cart_item.dart';
 import 'package:nikkle/services/cart_provider.dart';
 import 'package:nikkle/utils/colors.dart';
@@ -57,72 +56,65 @@ class _CartScreenState extends State<CartScreen> {
   Widget cart() {
     return Align(
       alignment: Alignment.bottomRight,
-      child: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.75,
-          width: MediaQuery.of(context).size.width * 0.95,
-          decoration: BoxDecoration(
-            color: TColors.bg,
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-          child: Card(
-            elevation: 0.0,
-            color: TColors.bg,
-            child: Column(
-              children: [
-                Consumer<CartProvider>(
-                  builder: (context, cartProvider, child) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Your Cart - ${cartProvider.itemCount.value} items',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                    );
-                  },
-                ),
-                Consumer<CartProvider>(
-                  builder: (context, cartProvider, child) {
-                    return cartProvider.cartItems.isEmpty
-                        ? Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.shopping_cart_outlined,
-                                    size: 80,
-                                    color: TColors.primary,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'Your cart is empty!',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'Add items to your cart and enjoy shopping!',
-                                    style:
-                                        Theme.of(context).textTheme.bodyMedium,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          color: TColors.bg,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+        child: Card(
+          color: TColors.bg,
+          elevation: 0.0,
+          child: Column(
+            children: [
+              Consumer<CartProvider>(
+                builder: (context, cartProvider, child) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Your Cart - ${cartProvider.itemCount.value} items',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                  );
+                },
+              ),
+              Consumer<CartProvider>(
+                builder: (context, cartProvider, child) {
+                  return cartProvider.cartItems.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: cartProvider.cartItems.length,
-                                  itemBuilder: (context, index) {
-                                    CartItem item =
-                                        cartProvider.cartItems[index];
+                                const Icon(
+                                  Icons.shopping_cart_outlined,
+                                  size: 80,
+                                  color: TColors.primary,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Your cart is empty!',
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Add items to your cart and enjoy shopping!',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : Flexible(
+                          child: SingleChildScrollView(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 700),
+                              child: Column(
+                                children: [
+                                  ...cartProvider.cartItems.map((item) {
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
@@ -160,9 +152,7 @@ class _CartScreenState extends State<CartScreen> {
                                                               TColors.primary,
                                                         ),
                                                         onPressed: () {
-                                                          Provider.of<CartProvider>(
-                                                                  context,
-                                                                  listen: false)
+                                                          cartProvider
                                                               .decreaseQuantity(
                                                                   item);
                                                         },
@@ -181,9 +171,7 @@ class _CartScreenState extends State<CartScreen> {
                                                               TColors.primary,
                                                         ),
                                                         onPressed: () {
-                                                          Provider.of<CartProvider>(
-                                                                  context,
-                                                                  listen: false)
+                                                          cartProvider
                                                               .increaseQuantity(
                                                                   item);
                                                         },
@@ -207,9 +195,7 @@ class _CartScreenState extends State<CartScreen> {
                                                 ),
                                                 child: GestureDetector(
                                                   onTap: () {
-                                                    Provider.of<CartProvider>(
-                                                            context,
-                                                            listen: false)
+                                                    cartProvider
                                                         .removeItemFromCart(
                                                             item);
                                                   },
@@ -239,8 +225,8 @@ class _CartScreenState extends State<CartScreen> {
                                                       .textTheme
                                                       .bodySmall!
                                                       .copyWith(
-                                                          color:
-                                                              TColors.primary),
+                                                        color: TColors.primary,
+                                                      ),
                                                 ),
                                               ),
                                             ],
@@ -248,137 +234,73 @@ class _CartScreenState extends State<CartScreen> {
                                         ],
                                       ),
                                     );
-                                  },
-                                ),
-                                Column(
-                                  children: [
-                                    Consumer<CartProvider>(
-                                      builder: (context, cartProvider, child) {
-                                        return Container(
-                                          padding: const EdgeInsets.all(20.0),
-                                          decoration: BoxDecoration(
-                                              color: TColors.grey,
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0)),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Total -',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(
-                                                        color: Colors.grey),
-                                              ),
-                                              Text(
-                                                  '${cartProvider.cartItems[0].currency} ${cartProvider.totalAmount.value.toStringAsFixed(2)}'),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    const SizedBox(height: 25),
-                                    SizedBox(
-                                      height: 50,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.7,
-                                      child: ElevatedButton.icon(
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return StatefulBuilder(
-                                                builder: (context, setState) {
-                                                  return AlertDialog(
-                                                    title: Center(
-                                                      child: Text(
-                                                          'PROCEED TO PAY',
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .titleLarge),
-                                                    ),
-                                                    content: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Text(
-                                                            'Total Item: ${cartProvider.itemCount.value.toString()}'),
-                                                        const SizedBox(
-                                                            height: 10),
-                                                        Text(
-                                                            'Total AmountPrice: ${cartProvider.totalAmount.value.toStringAsFixed(2)}'),
-                                                        const SizedBox(
-                                                            height: 20),
-                                                      ],
-                                                    ),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: const Text(
-                                                            'Cancel'),
-                                                      ),
-                                                      ElevatedButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: const Text('OK'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-                                            },
-                                          );
-                                        },
-                                        icon: CircleAvatar(
-                                          radius: 20,
-                                          backgroundColor: TColors.bg,
-                                          child: SvgPicture.asset(
-                                            'assets/icons/checkout.svg',
-                                            height: 20,
-                                            width: 20,
-                                          ),
-                                        ),
-                                        label: Text(
-                                          'Checkout',
+                                  }),
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Total -',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                color: TColors.white,
-                                              ),
+                                              .bodyLarge!
+                                              .copyWith(color: Colors.grey),
                                         ),
-                                        style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 32.0,
-                                                vertical: 12.0),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
+                                        Text(
+                                          '${cartProvider.cartItems.isNotEmpty ? cartProvider.cartItems[0].currency : ''} ${cartProvider.totalAmount.value.toStringAsFixed(2)}',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  SizedBox(
+                                    height: 50,
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.7,
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        //CHECKOUT LOGIC
+                                      },
+                                      icon: const CircleAvatar(
+                                        radius: 20,
+                                        backgroundColor: TColors.bg,
+                                        child: Icon(
+                                          Icons.shopping_cart_outlined,
+                                          color: TColors.primary,
+                                          size: 18,
+                                        ),
+                                      ),
+                                      label: Text(
+                                        'Checkout',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(
+                                              color: TColors.white,
                                             ),
-                                            backgroundColor: TColors.primary,
-                                            foregroundColor: TColors.white),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 32.0, vertical: 12.0),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
+                                        backgroundColor: TColors.primary,
+                                        foregroundColor: TColors.white,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          );
-                  },
-                ),
-              ],
-            ),
+                          ),
+                        );
+                },
+              ),
+            ],
           ),
         ),
       ),
