@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nikkle/models/cart_item.dart';
 import 'package:nikkle/models/products.dart';
+import 'package:nikkle/pages/checkout.dart';
+import 'package:nikkle/services/cart_provider.dart';
+import 'package:nikkle/services/cart_service.dart';
 import 'package:nikkle/utils/colors.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,11 +16,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final CartService cartService = CartService();
+  final GlobalKey<NavigatorState> _cartNavigatorKey =
+      GlobalKey<NavigatorState>();
+
   final TextEditingController searchController = TextEditingController();
   String searchQuery = '';
 
   final List<CartItem> cartItem = [];
-  final ValueNotifier<int> cartItemCount = ValueNotifier<int>(0);
 
   int _selectedIndex = 0;
   String selectedCategory = 'All Categories';
@@ -45,21 +52,21 @@ class _HomePageState extends State<HomePage> {
     Product(
         image: 'assets/images/image.png',
         name: 'Wireless Mouse',
-        currency: 'USD',
+        currency: 'INR',
         price: 29.99,
         qty: 112,
         unit: 'pc'),
     Product(
         image: 'assets/images/image.png',
         name: 'Bluetooth Headphones',
-        currency: 'USD',
+        currency: 'INR',
         price: 89.99,
         qty: 150,
         unit: 'pc'),
     Product(
         image: 'assets/images/image.png',
         name: 'Smartphone Stand',
-        currency: 'USD',
+        currency: 'INR',
         price: 15.50,
         qty: 5,
         unit: 'kg'),
@@ -69,6 +76,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cartProvider = Provider.of<CartProvider>(context, listen: false);
+      cartProvider.loadCart();
+    });
 
     filteredProducts = products;
 
@@ -128,12 +140,11 @@ class _HomePageState extends State<HomePage> {
               label: 'Dashboard',
             ),
             BottomNavigationBarItem(
-              icon: ValueListenableBuilder<int>(
-                valueListenable: cartItemCount,
-                builder: (context, count, _) {
+              icon: Consumer<CartProvider>(
+                builder: (context, cartProvider, child) {
                   return badges.Badge(
                     badgeContent: Text(
-                      '$count',
+                      '${cartProvider.itemCount.value}',
                       style: const TextStyle(color: Colors.white, fontSize: 10),
                     ),
                     child: const Icon(Icons.shopping_cart_outlined),
@@ -161,7 +172,14 @@ class _HomePageState extends State<HomePage> {
       case 0:
         return dashboard();
       case 1:
-        return const Center(child: Text('Cart Page Content'));
+        return Navigator(
+          key: _cartNavigatorKey,
+          onGenerateRoute: (RouteSettings settings) {
+            return MaterialPageRoute(
+              builder: (context) => const CartScreen(),
+            );
+          },
+        );
       case 2:
         return const Center(child: Text('Settings Page Content'));
       case 3:
@@ -395,14 +413,15 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    cartItem.add(CartItem(
-                        image: product.image,
-                        name: product.name,
-                        currency: product.currency,
-                        price: product.price,
-                        selectedqty: qty));
+                    Provider.of<CartProvider>(context, listen: false)
+                        .addItemToCart(CartItem(
+                            image: product.image,
+                            name: product.name,
+                            currency: product.currency,
+                            price: product.price,
+                            selectedqty: qty,
+                            totalqty: product.qty));
 
-                    cartItemCount.value = cartItemCount.value + qty;
                     Navigator.of(context).pop();
                   },
                   child: const Text('OK'),
