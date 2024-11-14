@@ -71,6 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const TextField(
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                           labelText: 'Email',
                           labelStyle: TextStyle(

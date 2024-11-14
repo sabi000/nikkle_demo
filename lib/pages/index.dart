@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nikkle/pages/checkout.dart';
 import 'package:nikkle/pages/home.dart';
 import 'package:nikkle/services/cart_provider.dart';
@@ -54,8 +55,10 @@ class _HomePageState extends State<HomePage> {
                 selectedCategory = newValue!;
               });
             },
-            dropdownColor: Colors.blue,
-            icon: const Icon(Icons.arrow_drop_down, color: TColors.white),
+            dropdownColor: TColors.primary,
+            icon: SvgPicture.asset(
+              'assets/icons/dropdown.svg',
+            ),
           ),
         );
         break;
@@ -66,7 +69,9 @@ class _HomePageState extends State<HomePage> {
               _selectedIndex = 0;
             });
           },
-          child: const Icon(Icons.arrow_back_sharp, color: TColors.white),
+          child: SvgPicture.asset(
+            'assets/icons/back.svg',
+          ),
         );
         break;
     }
@@ -88,7 +93,9 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     Navigator.pop(context, '/login');
                   },
-                  icon: const Icon(Icons.logout_rounded, size: 16),
+                  icon: SvgPicture.asset(
+                    'assets/icons/logout.svg',
+                  ),
                   label: Text(
                     'Logout',
                     style: Theme.of(context)
@@ -134,49 +141,112 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BottomNavigationBar _buildBottomNavigation() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-      elevation: 0.0,
-      selectedIconTheme: const IconThemeData(color: TColors.primary),
-      unselectedIconTheme: const IconThemeData(color: Colors.black),
-      selectedItemColor: TColors.primary,
-      unselectedItemColor: Colors.black,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      items: [
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          label: 'Dashboard',
-        ),
-        BottomNavigationBarItem(
-          icon: Consumer<CartProvider>(
-            builder: (context, cartProvider, child) {
-              return cartProvider.itemCount.value > 0
-                  ? badges.Badge(
-                      badgeContent: Text(
-                        '${cartProvider.itemCount.value}',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 10),
-                      ),
-                      child: const Icon(Icons.shopping_cart_outlined),
-                    )
-                  : const Icon(Icons.shopping_cart_outlined);
-            },
+  Widget _buildBottomNavigation() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 5,
+            blurRadius: 15,
+            offset: const Offset(0, 3),
           ),
-          label: 'Cart',
+        ],
+        borderRadius: const BorderRadius.all(Radius.circular(30)),
+      ),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(30)),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          elevation: 0.0,
+          selectedItemColor: TColors.primary,
+          unselectedItemColor: Colors.black,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/icons/home.svg',
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/icons/home_bold.svg',
+                colorFilter:
+                    const ColorFilter.mode(TColors.primary, BlendMode.srcIn),
+              ),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: Consumer<CartProvider>(
+                builder: (context, cartProvider, child) {
+                  return cartProvider.itemCount.value > 0
+                      ? badges.Badge(
+                          badgeContent: Text(
+                            '${cartProvider.itemCount.value}',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 10),
+                          ),
+                          child: SvgPicture.asset(
+                            'assets/icons/cart.svg',
+                          ),
+                        )
+                      : SvgPicture.asset(
+                          'assets/icons/cart.svg',
+                        );
+                },
+              ),
+              activeIcon: Consumer<CartProvider>(
+                builder: (context, cartProvider, child) {
+                  return cartProvider.itemCount.value > 0
+                      ? badges.Badge(
+                          badgeContent: Text(
+                            '${cartProvider.itemCount.value}',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 10),
+                          ),
+                          child: SvgPicture.asset(
+                            'assets/icons/cart_bold.svg',
+                            colorFilter: const ColorFilter.mode(
+                                TColors.primary, BlendMode.srcIn),
+                          ),
+                        )
+                      : SvgPicture.asset(
+                          'assets/icons/cart_bold.svg',
+                          colorFilter: const ColorFilter.mode(
+                              TColors.primary, BlendMode.srcIn),
+                        );
+                },
+              ),
+              label: 'Cart',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/icons/settings.svg',
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/icons/settings_bold.svg',
+                colorFilter:
+                    const ColorFilter.mode(TColors.primary, BlendMode.srcIn),
+              ),
+              label: 'Settings',
+            ),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                'assets/icons/profile.svg',
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/icons/profile_bold.svg',
+                colorFilter:
+                    const ColorFilter.mode(TColors.primary, BlendMode.srcIn),
+              ),
+              label: 'Profile',
+            ),
+          ],
         ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.settings_outlined),
-          label: 'Settings',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.person_outlined),
-          label: 'Profile',
-        ),
-      ],
+      ),
     );
   }
 

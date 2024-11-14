@@ -60,6 +60,21 @@ flutter:
     - assets/images/logo.png
     - assets/images/logo.svg
     - assets/images/image.png
+
+    - assets/icons/back.svg
+    - assets/icons/cart.svg
+    - assets/icons/checkout.svg
+    - assets/icons/dropdown.svg
+    - assets/icons/home.svg
+    - assets/icons/login.svg
+    - assets/icons/logout.svg
+    - assets/icons/profile.svg
+    - assets/icons/settings.svg
+    - assets/icons/cart_bold.svg
+    - assets/icons/home_bold.svg
+    - assets/icons/profile_bold.svg
+    - assets/icons/settings_bold.svg
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
   # For details regarding adding assets from package dependencies, see

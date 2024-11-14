@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nikkle/utils/colors.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -37,8 +38,8 @@ class SplashScreen extends StatelessWidget {
                         ),
                   Image.asset(
                     'assets/images/nikkle.png',
-                    width: smallestSide * 0.2,
-                    height: smallestSide * 0.2,
+                    width: smallestSide * 0.3,
+                    height: smallestSide * 0.3,
                   ),
                 ],
               ),
@@ -68,13 +69,13 @@ class SplashScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.pushNamed(context, '/login');
                       },
-                      icon: const CircleAvatar(
+                      icon: CircleAvatar(
                         radius: 20,
                         backgroundColor: TColors.bg,
-                        child: Icon(
-                          Icons.login,
-                          color: TColors.primary,
-                          size: 28,
+                        child: SvgPicture.asset(
+                          'assets/icons/login.svg',
+                          height: 18,
+                          width: 18,
                         ),
                       ),
                       iconAlignment: IconAlignment.end,

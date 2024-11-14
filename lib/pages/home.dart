@@ -141,7 +141,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           Expanded(
             child: Card(
-              elevation: 4,
+              color: TColors.bg,
               child: ListView.builder(
                 itemCount: filteredProducts.length,
                 shrinkWrap: false,

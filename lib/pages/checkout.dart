@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nikkle/models/cart_item.dart';
 import 'package:nikkle/services/cart_provider.dart';
 import 'package:nikkle/utils/colors.dart';
@@ -339,13 +340,13 @@ class _CartScreenState extends State<CartScreen> {
                                             },
                                           );
                                         },
-                                        icon: const CircleAvatar(
+                                        icon: CircleAvatar(
                                           radius: 20,
                                           backgroundColor: TColors.bg,
-                                          child: Icon(
-                                            Icons.shopping_cart_outlined,
-                                            color: TColors.primary,
-                                            size: 18,
+                                          child: SvgPicture.asset(
+                                            'assets/icons/checkout.svg',
+                                            height: 20,
+                                            width: 20,
                                           ),
                                         ),
                                         label: Text(
